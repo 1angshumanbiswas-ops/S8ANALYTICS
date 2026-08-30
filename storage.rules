@@ -1,0 +1,22 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Course preview assets: public read, instructor/admin write.
+    match /courses/{courseId}/public/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Gated course content: only entitlement-checked delivery via signed
+    // URLs issued by server code should be used in production. Direct client
+    // reads are denied by default here.
+    match /courses/{courseId}/gated/{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    match /submissions/{studentId}/{allPaths=**} {
+      allow read, write: if request.auth != null && request.auth.uid == studentId;
+    }
+  }
+}

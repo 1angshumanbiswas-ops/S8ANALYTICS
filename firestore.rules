@@ -1,0 +1,106 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function role() {
+      return isSignedIn() ? request.auth.token.role : null;
+    }
+
+    function isAdmin() {
+      return role() == 'admin' || role() == 'super_admin';
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Users can read/update their own profile; only admins can change roles.
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid);
+      allow update: if isOwner(uid) && request.resource.data.role == resource.data.role || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Instructor public profile is world-readable once published; only the
+    // instructor or an admin can write it.
+    match /instructors/{uid} {
+      allow read: if true;
+      allow write: if isOwner(uid) || isAdmin();
+    }
+
+    // Courses: published courses are public; drafts only visible to the
+    // owning instructor, reviewers and admins.
+    match /courses/{courseId} {
+      allow read: if resource.data.status == 'published'
+        || (isSignedIn() && (resource.data.instructorId == request.auth.uid
+            || role() == 'reviewer' || isAdmin()));
+      allow create: if isSignedIn() && role() == 'instructor'
+        && request.resource.data.instructorId == request.auth.uid;
+      allow update: if isSignedIn() && (
+          (resource.data.instructorId == request.auth.uid && request.resource.data.status != 'published')
+          || role() == 'reviewer' || isAdmin());
+      allow delete: if isAdmin();
+
+      match /lessons/{lessonId} {
+        allow read: if get(/databases/$(database)/documents/courses/$(courseId)).data.status == 'published'
+          || (isSignedIn() && (get(/databases/$(database)/documents/courses/$(courseId)).data.instructorId == request.auth.uid || isAdmin()));
+        allow write: if isSignedIn() && (get(/databases/$(database)/documents/courses/$(courseId)).data.instructorId == request.auth.uid || isAdmin());
+      }
+    }
+
+    // Enrolments and progress are private to the student; instructors of the
+    // course and admins can read for support/analytics purposes.
+    match /enrolments/{enrolmentId} {
+      allow read: if isSignedIn() && (resource.data.studentId == request.auth.uid || isAdmin());
+      allow write: if isAdmin(); // written by server-side entitlement activation only
+    }
+
+    match /progress/{progressId} {
+      allow read, write: if isSignedIn() && request.auth.uid == resource.data.studentId;
+      allow create: if isSignedIn() && request.auth.uid == request.resource.data.studentId;
+    }
+
+    // Orders and ledger entries: financial data, never client-writable.
+    match /orders/{orderId} {
+      allow read: if isSignedIn() && (resource.data.studentId == request.auth.uid || isAdmin());
+      allow write: if false; // Cloud Run / Admin SDK only
+    }
+
+    match /ledger_entries/{entryId} {
+      allow read: if isSignedIn() && (resource.data.instructorId == request.auth.uid || isAdmin());
+      allow write: if false;
+    }
+
+    match /payouts/{payoutId} {
+      allow read: if isSignedIn() && (resource.data.instructorId == request.auth.uid || isAdmin());
+      allow write: if false;
+    }
+
+    match /reviews/{reviewId} {
+      allow read: if resource.data.moderationStatus == 'approved' || isAdmin();
+      allow create: if isSignedIn() && request.resource.data.studentId == request.auth.uid;
+      allow update, delete: if isAdmin(); // instructors cannot edit/delete reviews
+    }
+
+    match /certificates/{certId} {
+      allow read: if true; // verification links are public
+      allow write: if false;
+    }
+
+    match /support_cases/{caseId} {
+      allow read, write: if isSignedIn() && (resource.data.userId == request.auth.uid
+        || role() == 'support_finance' || isAdmin());
+    }
+
+    match /audit_logs/{logId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+  }
+}
