@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useAuth } from "@/lib/auth-context";
 import { getFirebaseClient } from "@/lib/firebase.client";
 import { signOut } from "firebase/auth";
@@ -17,7 +18,8 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
-        <Link href="/" className="text-lg font-semibold tracking-tight text-emerald-900">
+        <Link href="/" className="flex items-center gap-2 text-lg font-semibold tracking-tight text-emerald-900">
+          <Image src="/logo.png" alt="S8 Analytics" width={28} height={21} className="h-7 w-auto" priority />
           S8 <span className="font-normal text-slate-500">Analytics</span>
         </Link>
         <nav className="hidden gap-6 text-sm text-slate-600 md:flex">
