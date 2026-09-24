@@ -47,12 +47,9 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center px-6 py-3">
-        <Link href="/" className="flex shrink-0 items-center gap-2">
+        <Link href="/" className="flex shrink-0 items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.svg" alt="S8 Analytics" className="h-8 w-8" />
-          <span className="text-lg font-semibold tracking-tight text-emerald-900">
-            S8 <span className="font-normal text-slate-500">Analytics</span>
-          </span>
+          <img src="/logo.png" alt="Sovereign Eight Analytics" className="h-16 w-auto" />
         </Link>
 
         <nav className="ml-10 hidden items-center gap-6 text-sm text-slate-600 md:flex">
