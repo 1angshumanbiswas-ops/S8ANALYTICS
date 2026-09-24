@@ -7,7 +7,10 @@ import type { Course } from "@/lib/types";
 
 declare global {
   interface Window {
-    Razorpay: new (options: Record<string, unknown>) => { open: () => void };
+    Razorpay: new (options: Record<string, unknown>) => {
+      open: () => void;
+      on: (event: string, handler: (response: unknown) => void) => void;
+    };
   }
 }
 
@@ -48,19 +51,39 @@ export function EnrollButton({ course }: { course: Course }) {
         name: "S8 Analytics",
         description: course.title,
         handler: async (response: Record<string, string>) => {
-          await fetch("/api/checkout/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
-            body: JSON.stringify({ orderId: data.orderId, ...response }),
-          });
-          router.push("/dashboard");
+          try {
+            const verifyRes = await fetch("/api/checkout/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
+              body: JSON.stringify({ orderId: data.orderId, ...response }),
+            });
+            if (!verifyRes.ok) {
+              const verifyData = await verifyRes.json().catch(() => ({}));
+              setError(verifyData.error || "Payment could not be verified. Contact support if you were charged.");
+              return;
+            }
+            router.push("/dashboard");
+          } catch {
+            setError("Payment could not be verified. Contact support if you were charged.");
+          }
+        },
+        modal: {
+          // User closed the checkout modal without completing payment.
+          ondismiss: () => {
+            setLoading(false);
+            setError("Payment cancelled.");
+          },
         },
         theme: { color: "#065f46" },
+      });
+      rzp.on("payment.failed", (response: unknown) => {
+        const description = (response as { error?: { description?: string } })?.error?.description;
+        setError(description || "Payment failed. Please try again.");
+        setLoading(false);
       });
       rzp.open();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
       setLoading(false);
     }
   }

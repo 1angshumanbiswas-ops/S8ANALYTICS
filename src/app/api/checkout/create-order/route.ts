@@ -17,6 +17,10 @@ export async function POST(req: NextRequest) {
 
   const { price } = effectivePrice(course);
 
+  if (price > 0 && price < 100) {
+    return NextResponse.json({ error: "Amount must be at least ₹1 (100 paise)" }, { status: 400 });
+  }
+
   const orderRef = adminDb.collection("orders").doc();
   const order: Order = {
     orderId: orderRef.id,
@@ -52,12 +56,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ free: true });
   }
 
-  const rzpOrder = await getRazorpay().orders.create({
-    amount: price,
-    currency: "INR",
-    receipt: order.orderId,
-    notes: { courseId: course.courseId, studentId: decoded.uid },
-  });
+  let rzpOrder: { id: string };
+  try {
+    rzpOrder = await getRazorpay().orders.create({
+      amount: price,
+      currency: "INR",
+      receipt: order.orderId,
+      notes: { courseId: course.courseId, studentId: decoded.uid },
+    });
+  } catch (err) {
+    const statusCode = (err as { statusCode?: number })?.statusCode;
+    if (statusCode === 401) {
+      return NextResponse.json({ error: "Payment gateway authentication failed" }, { status: 401 });
+    }
+    return NextResponse.json({ error: "Could not create payment order" }, { status: 500 });
+  }
 
   order.providerOrderRef = rzpOrder.id;
   await orderRef.set(order);
