@@ -199,8 +199,52 @@ export const PLATFORM_DEFAULT_COMMISSION_RATE = Number(
 );
 
 export const CATEGORIES = [
-  { id: "excel", label: "Excel & Professional Skills" },
-  { id: "ai", label: "Artificial Intelligence" },
-  { id: "analytics", label: "Data Analytics" },
-  { id: "astrology", label: "Vedic Learning" },
+  {
+    id: "excel",
+    label: "Excel & Professional Skills",
+    icon: "📊",
+    description: "Dashboards, formulas & AI-assisted reporting",
+  },
+  {
+    id: "ai",
+    label: "Artificial Intelligence",
+    icon: "🤖",
+    description: "Prompting, automation & building with AI",
+  },
+  {
+    id: "analytics",
+    label: "Data Analytics",
+    icon: "📈",
+    description: "Power BI, SQL & decision-ready data",
+  },
+  {
+    id: "pm",
+    label: "Project & Product Management",
+    icon: "🗂️",
+    description: "Scrum, Agile, PMP prep & product ownership",
+  },
+  {
+    id: "cybersecurity",
+    label: "Cybersecurity",
+    icon: "🛡️",
+    description: "Security fundamentals, cloud security & certifications",
+  },
+  {
+    id: "marketing",
+    label: "Digital Marketing",
+    icon: "📣",
+    description: "SEO, paid ads, content & growth marketing",
+  },
+  {
+    id: "personal-dev",
+    label: "Personal & Professional Development",
+    icon: "🌱",
+    description: "Communication, leadership & career growth skills",
+  },
+  {
+    id: "astrology",
+    label: "Vedic Learning",
+    icon: "✨",
+    description: "Vedic tools, charts & practitioner skills",
+  },
 ] as const;
