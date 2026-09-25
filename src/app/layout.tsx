@@ -14,30 +14,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://s8-analytics-lms.netlify.app";
-const TITLE = "S8 Analytics | Learn skills that actually pay off";
-const DESCRIPTION =
-  "Excel, AI, Analytics & more — taught live by real practitioners, sharpened with AI-assisted practice, backed by a verifiable certificate. Founding cohort now open.";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: TITLE,
-  description: DESCRIPTION,
-  keywords: ["Excel course", "AI course", "data analytics course", "online academy", "instructor marketplace", "S8 Analytics"],
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: SITE_URL,
-    siteName: "S8 Analytics",
-    type: "website",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-    images: ["/opengraph-image"],
-  },
+  title: "S8 Analytics | Learning Marketplace",
+  description:
+    "Learn practical Excel, AI, Analytics and more from trusted instructors. Live and recorded learning with AI-assisted practice.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -51,7 +31,25 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <SiteHeader />
           <div className="flex-1">{children}</div>
           <footer className="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-400">
-            S8 Analytics — One learning marketplace. Multiple expert instructors. Instructor-controlled pricing.
+            <div className="mx-auto flex items-center justify-center gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo.png" alt="Sovereign Eight Analytics" className="h-10 w-auto opacity-90" />
+              <span
+                aria-hidden
+                className="relative hidden h-7 w-7 shrink-0 overflow-hidden rounded-md bg-[#152A4A] sm:block"
+              >
+                <span
+                  className="absolute inset-0 bg-[#2E9C90]"
+                  style={{ clipPath: "polygon(100% 0, 100% 100%, 35% 100%)" }}
+                />
+                <span className="relative z-10 flex h-full w-full items-center justify-center text-[10px] font-bold tracking-tight text-white">
+                  S8
+                </span>
+              </span>
+            </div>
+            <p className="mt-3">
+              S8 Analytics — One learning marketplace. Multiple expert instructors. Instructor-controlled pricing.
+            </p>
           </footer>
         </AuthProvider>
       </body>
