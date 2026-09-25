@@ -3,7 +3,7 @@ import { RoleGuard } from "@/components/role-guard";
 
 export default function InstructorLayout({ children }: { children: React.ReactNode }) {
   return (
-    <RoleGuard allow={["instructor", "instructor_team_member"]}>
+    <RoleGuard allow={["instructor", "instructor_team_member", "admin", "super_admin"]}>
       <div className="mx-auto flex max-w-6xl gap-8 px-6 py-8">
         <aside className="w-48 flex-none space-y-1 text-sm">
           <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Instructor Studio</p>

@@ -6,7 +6,8 @@ import type { Course } from "@/lib/types";
 export async function POST(req: NextRequest) {
   const decoded = await requireUser(req);
   if (!decoded) return NextResponse.json({ error: "Sign in required" }, { status: 401 });
-  if (decoded.role !== "instructor") {
+  const canCreate = decoded.role === "instructor" || decoded.role === "admin" || decoded.role === "super_admin";
+  if (!canCreate) {
     return NextResponse.json({ error: "Only instructors can create courses" }, { status: 403 });
   }
 
