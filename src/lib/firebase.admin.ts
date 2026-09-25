@@ -1,6 +1,7 @@
 import { getApps, initializeApp, cert, applicationDefault, type App } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
+import { getStorage } from "firebase-admin/storage";
 
 const USE_EMULATORS = process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === "true";
 
@@ -37,3 +38,13 @@ function buildApp(): App {
 const app = buildApp();
 export const adminAuth = getAuth(app);
 export const adminDb = getFirestore(app);
+
+// Admin SDK's default bucket guess (<project-id>.appspot.com) doesn't match
+// newer Firebase projects, which provision <project-id>.firebasestorage.app
+// instead. Pass the real bucket name explicitly (same value the client SDK
+// uses) so uploads/signed-URL generation hit the bucket that actually exists.
+export const adminStorage = getStorage(app);
+export function getMaterialsBucket() {
+  const bucketName = process.env.FIREBASE_ADMIN_STORAGE_BUCKET || process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+  return bucketName ? adminStorage.bucket(bucketName) : adminStorage.bucket();
+}
