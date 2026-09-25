@@ -1,9 +1,25 @@
+import type { Metadata } from "next";
 import { listPublishedCourses, getInstructor } from "@/lib/queries";
 import { CourseCard } from "@/components/course-card";
 import { CATEGORIES } from "@/lib/types";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}): Promise<Metadata> {
+  const { category } = await searchParams;
+  const cat = CATEGORIES.find((c) => c.id === category);
+  return {
+    title: cat ? `${cat.label} Courses | S8 Analytics` : "Course Catalogue | S8 Analytics",
+    description: cat
+      ? cat.description
+      : "Browse practical, instructor-led courses in Excel, AI, Data Analytics, Project Management, Cybersecurity, Digital Marketing and more on S8 Analytics.",
+  };
+}
 
 export default async function CoursesPage({
   searchParams,

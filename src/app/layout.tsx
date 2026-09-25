@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   title: "S8 Analytics | Learning Marketplace",
   description:
     "Learn practical Excel, AI, Analytics and more from trusted instructors. Live and recorded learning with AI-assisted practice.",
+  verification: {
+    google: "t86hZzB9jnEdsMRYNGffv-KuQCHuh1P1u30SylQCUW0",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

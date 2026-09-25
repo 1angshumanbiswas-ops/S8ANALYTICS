@@ -1,8 +1,24 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getInstructor, listInstructorPublishedCourses } from "@/lib/queries";
 import { CourseCard } from "@/components/course-card";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ instructorId: string }>;
+}): Promise<Metadata> {
+  const { instructorId } = await params;
+  const instructor = await getInstructor(instructorId);
+  if (!instructor) return { title: "Instructor not found | S8 Analytics" };
+  return {
+    title: `${instructor.publicProfile.displayName} - Instructor | S8 Analytics`,
+    description:
+      instructor.publicProfile.bio || `Courses by ${instructor.publicProfile.displayName} on S8 Analytics.`,
+  };
+}
 
 export default async function InstructorStorefrontPage({
   params,

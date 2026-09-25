@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getCourse, getInstructor } from "@/lib/queries";
@@ -5,6 +6,22 @@ import { formatINR, effectivePrice } from "@/lib/queries";
 import { EnrollButton } from "@/components/enroll-button";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ courseId: string }>;
+}): Promise<Metadata> {
+  const { courseId } = await params;
+  const course = await getCourse(courseId);
+  if (!course || course.status !== "published") {
+    return { title: "Course not found | S8 Analytics" };
+  }
+  return {
+    title: `${course.title} | S8 Analytics`,
+    description: course.subtitle || `Learn ${course.title} - a ${course.level}-level course on S8 Analytics.`,
+  };
+}
 
 export default async function CourseDetailPage({
   params,
