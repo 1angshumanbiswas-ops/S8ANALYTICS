@@ -1,34 +1,37 @@
-{
-  "name": "s8-lms",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint",
-    "emulators": "firebase emulators:start --only auth,firestore,storage",
-    "seed": "FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 NEXT_PUBLIC_USE_FIREBASE_EMULATORS=true npx tsx scripts/seed.ts"
-  },
-  "dependencies": {
-    "firebase": "^12.18.0",
-    "firebase-admin": "^14.3.0",
-    "next": "16.3.3",
-    "razorpay": "^2.9.8",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "zod": "^4.5.4"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.3.3",
-    "firebase-tools": "^15.28.2",
-    "tailwindcss": "^4",
-    "tsx": "^4.23.13",
-    "typescript": "^5"
-  }
+﻿{
+    "name":  "s8-lms",
+    "version":  "0.1.0",
+    "private":  true,
+    "scripts":  {
+                    "dev":  "next dev",
+                    "build":  "next build",
+                    "start":  "next start",
+                    "lint":  "eslint",
+                    "emulators":  "firebase emulators:start --only auth,firestore,storage",
+                    "seed":  "FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 NEXT_PUBLIC_USE_FIREBASE_EMULATORS=true npx tsx scripts/seed.ts"
+                },
+    "dependencies":  {
+                         "firebase":  "^12.18.0",
+                         "firebase-admin":  "^14.3.0",
+                         "next":  "16.3.3",
+                         "razorpay":  "^2.9.8",
+                         "react":  "19.2.8",
+                         "react-dom":  "19.2.8",
+                         "zod":  "^4.5.4"
+                     },
+    "devDependencies":  {
+                            "@tailwindcss/postcss":  "^4",
+                            "@types/node":  "^20",
+                            "@types/react":  "^19",
+                            "@types/react-dom":  "^19",
+                            "eslint":  "^9",
+                            "eslint-config-next":  "16.3.3",
+                            "firebase-tools":  "^15.28.2",
+                            "tailwindcss":  "^4",
+                            "tsx":  "^4.23.13",
+                            "typescript":  "^5"
+                        },
+    "overrides":  {
+                      "jose":  "4.15.9"
+                  }
 }
