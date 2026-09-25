@@ -47,9 +47,22 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center px-6 py-3">
-        <Link href="/" className="flex shrink-0 items-center">
+        <Link href="/" className="flex shrink-0 items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="Sovereign Eight Analytics" className="h-16 w-auto" />
+          {/* S8 mark: navy/teal diagonal-split badge, echoes the logo's own palette */}
+          <span
+            aria-hidden
+            className="relative hidden h-9 w-9 shrink-0 overflow-hidden rounded-lg bg-[#152A4A] sm:block"
+          >
+            <span
+              className="absolute inset-0 bg-[#2E9C90]"
+              style={{ clipPath: "polygon(100% 0, 100% 100%, 35% 100%)" }}
+            />
+            <span className="relative z-10 flex h-full w-full items-center justify-center text-sm font-bold tracking-tight text-white">
+              S8
+            </span>
+          </span>
         </Link>
 
         <nav className="ml-10 hidden items-center gap-6 text-sm text-slate-600 md:flex">
