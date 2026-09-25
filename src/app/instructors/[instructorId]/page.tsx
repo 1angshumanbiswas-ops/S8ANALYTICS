@@ -17,6 +17,9 @@ export async function generateMetadata({
     title: `${instructor.publicProfile.displayName} - Instructor | S8 Analytics`,
     description:
       instructor.publicProfile.bio || `Courses by ${instructor.publicProfile.displayName} on S8 Analytics.`,
+    alternates: {
+      canonical: `/instructors/${instructorId}`,
+    },
   };
 }
 

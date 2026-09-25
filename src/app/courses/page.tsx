@@ -18,6 +18,12 @@ export async function generateMetadata({
     description: cat
       ? cat.description
       : "Browse practical, instructor-led courses in Excel, AI, Data Analytics, Project Management, Cybersecurity, Digital Marketing and more on S8 Analytics.",
+    // Canonicalize every category filter (?category=x) back to the base
+    // /courses URL so Google consolidates ranking signals onto one page
+    // instead of treating each filtered view as separate duplicate content.
+    alternates: {
+      canonical: "/courses",
+    },
   };
 }
 

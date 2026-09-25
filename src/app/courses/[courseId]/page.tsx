@@ -20,6 +20,9 @@ export async function generateMetadata({
   return {
     title: `${course.title} | S8 Analytics`,
     description: course.subtitle || `Learn ${course.title} - a ${course.level}-level course on S8 Analytics.`,
+    alternates: {
+      canonical: `/courses/${courseId}`,
+    },
   };
 }
 
@@ -34,8 +37,47 @@ export default async function CourseDetailPage({
   const instructor = await getInstructor(course.instructorId);
   const { price, onSale, listPrice } = effectivePrice(course);
 
+  // Course structured data (JSON-LD) - lets Google show rich results
+  // (price, provider, rating) for course pages in search.
+  const courseJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: course.title,
+    description: course.subtitle || `Learn ${course.title} - a ${course.level}-level course on S8 Analytics.`,
+    provider: {
+      "@type": "Organization",
+      name: "S8 Analytics",
+      sameAs: "https://learn.s8analytics.com",
+    },
+    ...(instructor && {
+      instructor: {
+        "@type": "Person",
+        name: instructor.publicProfile.displayName,
+      },
+    }),
+    ...(instructor && instructor.ratingSummary.count > 0 && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: instructor.ratingSummary.average,
+        reviewCount: instructor.ratingSummary.count,
+      },
+    }),
+    offers: {
+      "@type": "Offer",
+      price: (course.priceConfig.isFree ? 0 : price / 100).toFixed(2),
+      priceCurrency: course.priceConfig.currency,
+      availability: "https://schema.org/InStock",
+      url: `https://learn.s8analytics.com/courses/${course.courseId}`,
+    },
+  };
+
   return (
     <main className="mx-auto grid max-w-6xl gap-8 px-6 py-10 lg:grid-cols-3">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseJsonLd) }}
+      />
       <div className="lg:col-span-2">
         <p className="text-xs font-medium uppercase tracking-wide text-emerald-700">{course.categoryId} · {course.level}</p>
         <h1 className="mt-1 text-3xl font-semibold text-slate-900">{course.title}</h1>
