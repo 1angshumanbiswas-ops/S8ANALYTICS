@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { listPublishedCourses, getInstructor } from "@/lib/queries";
 import { CourseCard } from "@/components/course-card";
-import { CATEGORIES } from "@/lib/types";
+import { CATEGORIES, categoryHref } from "@/lib/types";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -55,7 +55,7 @@ export default async function CoursesPage({
         {CATEGORIES.map((c) => (
           <Link
             key={c.id}
-            href={`/courses?category=${c.id}`}
+            href={categoryHref(c.id)}
             className={`rounded-full border px-3 py-1 text-sm ${category === c.id ? "border-emerald-600 bg-emerald-50 text-emerald-800" : "border-slate-300 text-slate-600"}`}
           >
             {c.label}

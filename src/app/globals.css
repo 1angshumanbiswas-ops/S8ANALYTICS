@@ -6,6 +6,12 @@
 }
 
 @theme inline {
+  /* S8 brand palette (from the logo / S8 badge) used by the AI learner portal */
+  --color-s8-navy: #152a4a;
+  --color-s8-navy-soft: #1d3a63;
+  --color-s8-teal: #2e9c90;
+  --color-s8-teal-dark: #23857a;
+  --color-s8-mint: #e6f4f2;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);

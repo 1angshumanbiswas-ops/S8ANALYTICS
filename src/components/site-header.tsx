@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { getFirebaseClient } from "@/lib/firebase.client";
 import { signOut } from "firebase/auth";
-import { CATEGORIES } from "@/lib/types";
+import { CATEGORIES, categoryHref } from "@/lib/types";
 
 // A single "Courses" mega-dropdown lists every academy, instead of one flat
 // nav tab per category — with 8+ categories, flat tabs overflow the header.
@@ -23,7 +24,7 @@ function CourseMenu() {
         {CATEGORIES.map((c) => (
           <Link
             key={c.id}
-            href={`/courses?category=${c.id}`}
+            href={categoryHref(c.id)}
             className="flex items-start gap-2 rounded-md px-2 py-2 text-sm text-slate-600 hover:bg-emerald-50 hover:text-emerald-800"
           >
             <span aria-hidden>{c.icon}</span>
@@ -37,6 +38,9 @@ function CourseMenu() {
 
 export function SiteHeader() {
   const { user, role, loading } = useAuth();
+  const pathname = usePathname();
+  // The AI learner portal (/ai/*) ships its own top bar.
+  if (pathname === "/ai" || pathname?.startsWith("/ai/")) return null;
 
   async function handleSignOut() {
     const { auth } = getFirebaseClient();

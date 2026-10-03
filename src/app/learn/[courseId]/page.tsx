@@ -18,7 +18,10 @@ export default function LearningPlayerPage({ params }: { params: Promise<{ cours
     fetch(`/api/courses/${courseId}`).then((r) => r.json()).then(setCourse);
     fetch(`/api/courses/${courseId}/lessons`).then((r) => r.json()).then((ls: Lesson[]) => {
       setLessons(ls);
-      if (ls.length) setActiveLessonId(ls[0].lessonId);
+      // Deep link from the AI portal: /learn/<course>?lesson=<lessonId>
+      const wanted = new URLSearchParams(window.location.search).get("lesson");
+      const target = ls.find((l) => l.lessonId === wanted) ?? ls[0];
+      if (target) setActiveLessonId(target.lessonId);
     });
   }, [courseId]);
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CATEGORIES } from "@/lib/types";
+import { CATEGORIES, categoryHref } from "@/lib/types";
 
 export default function Home() {
   return (
@@ -35,7 +35,7 @@ export default function Home() {
           {CATEGORIES.map((c) => (
             <Link
               key={c.id}
-              href={`/courses?category=${c.id}`}
+              href={categoryHref(c.id)}
               className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-emerald-300 hover:shadow-md"
             >
               <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-emerald-50 transition group-hover:bg-emerald-100" />

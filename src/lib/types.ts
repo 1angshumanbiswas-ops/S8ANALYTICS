@@ -256,3 +256,9 @@ export const CATEGORIES = [
     description: "Vedic tools, charts & practitioner skills",
   },
 ] as const;
+
+// Where a category card/link should lead. The AI academy opens the dedicated
+// learner portal (/ai); every other category filters the public catalogue.
+export function categoryHref(categoryId: string): string {
+  return categoryId === "ai" ? "/ai" : `/courses?category=${categoryId}`;
+}
